@@ -96,7 +96,7 @@ class HZUtilTest extends FunSuite {
 
         rootLoggerLevel2Trace()
         log_trace("Levele.TRACE + " + "log_trace()")
-        assertResult("TRACE - Levele.TRACE + log_trace()\r\n")(test_logger.getRootLog)
+        assertResult(f"TRACE - Levele.TRACE + log_trace()%n")(test_logger.getRootLog)
 
         test_logger.resetLog
         rootLoggerLevel2Debug()
@@ -105,7 +105,7 @@ class HZUtilTest extends FunSuite {
 
         test_logger.resetLog
         log_debug("Levele.DEBUG + " + "log_debug()")
-        assertResult("DEBUG - Levele.DEBUG + log_debug()\r\n")(test_logger.getRootLog)
+        assertResult(f"DEBUG - Levele.DEBUG + log_debug()%n")(test_logger.getRootLog)
 
         test_logger.resetLog
         rootLoggerLevel2Info()
@@ -114,7 +114,7 @@ class HZUtilTest extends FunSuite {
 
         test_logger.resetLog
         log_info("Levele.INFO + " + "log_info()")
-        assertResult("INFO  - Levele.INFO + log_info()\r\n")(test_logger.getRootLog)
+        assertResult(f"INFO  - Levele.INFO + log_info()%n")(test_logger.getRootLog)
 
         test_logger.resetLog
         rootLoggerLevel2Error()
@@ -128,7 +128,7 @@ class HZUtilTest extends FunSuite {
 
         loggerLevel2Trace()
         log_trace("Levele.TRACE + " + "log_trace()")
-        assertResult("TRACE - Levele.TRACE + log_trace()\r\n")(test_logger.getLog)
+        assertResult(f"TRACE - Levele.TRACE + log_trace()%n")(test_logger.getLog)
 
         test_logger.resetLog
         loggerLevel2Debug()
@@ -137,7 +137,7 @@ class HZUtilTest extends FunSuite {
 
         test_logger.resetLog
         log_debug("Levele.DEBUG + " + "log_debug()")
-        assertResult("DEBUG - Levele.DEBUG + log_debug()\r\n")(test_logger.getLog)
+        assertResult(f"DEBUG - Levele.DEBUG + log_debug()%n")(test_logger.getLog)
 
         test_logger.resetLog
         loggerLevel2Info()
@@ -146,7 +146,7 @@ class HZUtilTest extends FunSuite {
 
         test_logger.resetLog
         log_info("Levele.INFO + " + "log_info()")
-        assertResult("INFO  - Levele.INFO + log_info()\r\n")(test_logger.getLog)
+        assertResult(f"INFO  - Levele.INFO + log_info()%n")(test_logger.getLog)
 
         test_logger.resetLog
         loggerLevel2Error()
@@ -160,7 +160,7 @@ class HZUtilTest extends FunSuite {
 
         rootAppenderFilterLevel2Trace("TestAppender", "TestFilter")
         log_trace("Levele.TRACE + " + "log_trace()")
-        assertResult("TRACE - Levele.TRACE + log_trace()\r\n")(test_logger.getRootLog)
+        assertResult(f"TRACE - Levele.TRACE + log_trace()%n")(test_logger.getRootLog)
 
         test_logger.resetLog
         rootAppenderFilterLevel2Debug("TestAppender", "TestFilter")
@@ -169,7 +169,7 @@ class HZUtilTest extends FunSuite {
 
         test_logger.resetLog
         log_debug("Levele.DEBUG + " + "log_debug()")
-        assertResult("DEBUG - Levele.DEBUG + log_debug()\r\n")(test_logger.getRootLog)
+        assertResult(f"DEBUG - Levele.DEBUG + log_debug()%n")(test_logger.getRootLog)
 
         test_logger.resetLog
         rootAppenderFilterLevel2Info("TestAppender", "TestFilter")
@@ -178,7 +178,7 @@ class HZUtilTest extends FunSuite {
 
         test_logger.resetLog
         log_info("Levele.INFO + " + "log_info()")
-        assertResult("INFO  - Levele.INFO + log_info()\r\n")(test_logger.getRootLog)
+        assertResult(f"INFO  - Levele.INFO + log_info()%n")(test_logger.getRootLog)
 
         test_logger.resetLog
         rootAppenderFilterLevel2Error("TestAppender", "TestFilter")
@@ -192,7 +192,7 @@ class HZUtilTest extends FunSuite {
 
         appenderFilterLevel2Trace("TestAppender", "TestFilter")
         log_trace("Levele.TRACE + " + "log_trace()")
-        assertResult("TRACE - Levele.TRACE + log_trace()\r\n")(test_logger.getLog)
+        assertResult(f"TRACE - Levele.TRACE + log_trace()%n")(test_logger.getLog)
 
         test_logger.resetLog
         appenderFilterLevel2Debug("TestAppender", "TestFilter")
@@ -201,7 +201,7 @@ class HZUtilTest extends FunSuite {
 
         test_logger.resetLog
         log_debug("Levele.DEBUG + " + "log_debug()")
-        assertResult("DEBUG - Levele.DEBUG + log_debug()\r\n")(test_logger.getLog)
+        assertResult(f"DEBUG - Levele.DEBUG + log_debug()%n")(test_logger.getLog)
 
         test_logger.resetLog
         appenderFilterLevel2Info("TestAppender", "TestFilter")
@@ -210,7 +210,7 @@ class HZUtilTest extends FunSuite {
 
         test_logger.resetLog
         log_info("Levele.INFO + " + "log_info()")
-        assertResult("INFO  - Levele.INFO + log_info()\r\n")(test_logger.getLog)
+        assertResult(f"INFO  - Levele.INFO + log_info()%n")(test_logger.getLog)
 
         test_logger.resetLog
         appenderFilterLevel2Error("TestAppender", "TestFilter")
@@ -225,7 +225,7 @@ class HZUtilTest extends FunSuite {
         log_info("this is " + "test log_info(msg)" + " 01")
 //        println("'%s'".format(test_logger.getLog))
 //        test_logger.byteOutStream.toByteArray.foreach(printf("%02X",_))
-        assertResult("INFO  - this is test log_info(msg) 01\r\n")(test_logger.getLog)
+        assertResult(f"INFO  - this is test log_info(msg) 01%n")(test_logger.getLog)
     }
 
     test("HZLog.log_debug(msg).01") {
@@ -260,7 +260,7 @@ class HZUtilTest extends FunSuite {
 
 //        printf("'%d'%n",ste.getLineNumber)
 //        printf("'%s'%n",test_logger.getLog)
-        assert(test_logger.getLog.dropRight(2).matches("TRACE - .*:%d:this is test l_t\\(msg\\) 02".format(ste.getLineNumber+1)))
+        assert(test_logger.getLog.matches(f"""TRACE - .*:${ste.getLineNumber+1}:this is test l_t\\(msg\\) 02%n"""))
     }
 
     test("HZProperty.01") {
