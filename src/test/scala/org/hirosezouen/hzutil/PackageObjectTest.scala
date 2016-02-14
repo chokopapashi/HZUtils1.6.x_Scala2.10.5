@@ -45,15 +45,19 @@ class PackageObjectTest extends FunSuite {
                              89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106,
                              107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122,
                              123, 124, 125, 126)
+        import java.nio.charset.Charset
+        implicit val cs = Charset.forName("Shift_JIS")
         val a1 = string2ByteArray(""" !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~""")
-
+//        println(a1.map(s =>f"$s%02X").mkString)
         assert(e1 sameElements a1)
     }
 
     test("string2ByteArray_2") {
         val e1 = Array(0x82, 0xA0, 0x82, 0xA2, 0x82, 0xA4, 0x82, 0xA6, 0x82, 0xA8, 0x94, 0x5C,
                       0x00, 0x01, 0x02, 0xab, 0xcd, 0xef, 0xff, 0x78, 0x7A, 0x7A, 0x61, 0x78, 0x61).map(_.toByte)
-        val a1 = string2ByteArray("""あいうえお能\x00\x01\x02\xab\xcd\xef\xff\xzz\a\x\a""")
+        import java.nio.charset.Charset
+        val a1 = string2ByteArray("""あいうえお能\x00\x01\x02\xab\xcd\xef\xff\xzz\a\x\a""")(Charset.forName("Shift_JIS"))
+        println(a1.map(s => f"$s%02X").mkString)
         assert(e1 sameElements a1)
     }
     

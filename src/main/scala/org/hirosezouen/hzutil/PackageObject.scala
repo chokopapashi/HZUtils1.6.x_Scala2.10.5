@@ -8,6 +8,8 @@
 
 package org.hirosezouen
 
+import java.nio.charset.Charset
+
 import scala.collection.mutable
 import scala.util.control.Exception._
 
@@ -58,39 +60,39 @@ package object hzutil {
         strBuilder.toString
     }
 
-    def string2ByteArray(src: String): Array[Byte] = {
+    def string2ByteArray(src: String)(implicit cs: Charset = null): Array[Byte] = {
+        var charset: Charset = cs
+        if(charset == null)
+            charset = Charset.forName(sys.props("file.encoding"))
         val buffer = mutable.ArrayBuffer.empty[Byte]
         var strBuilder = new StringBuilder()
         var itr = src.iterator
         var loopFlag = true
         while(loopFlag && itr.hasNext) {
             itr.next match {
-                case '\\' => {
-                    if(itr.hasNext) {
-                        itr.next match {
-                            case 'x' => {
-                                val hexStr = itr.take(2).mkString
-                                if(hexStr.length == 2) {
-                                    catching(classOf[NumberFormatException]) opt Integer.parseInt(hexStr,16) match {
-                                        case Some(i) => {
-                                            buffer ++= strBuilder.mkString.getBytes /* There is to convert string to bytes */
-                                            strBuilder = new StringBuilder()
-                                            buffer += i.toByte
-                                            itr = itr.drop(2)
-                                        }
-                                        case None => strBuilder += 'x' /* when it faild check hex string, re check next loop */
-                                    }
-                                } else strBuilder ++= hexStr
+                case '\\' if itr.hasNext => itr.next match {
+                    case 'x' => {
+                        val hexStr = itr.take(2).mkString
+                        if(hexStr.length == 2) {
+                            catching(classOf[NumberFormatException]) opt Integer.parseInt(hexStr,16) match {
+                                case Some(i) => {
+                                    buffer ++= strBuilder.mkString.getBytes(charset) /* There is to convert string to bytes */
+                                    strBuilder = new StringBuilder()
+                                    buffer += i.toByte
+                                    itr = itr.drop(2)
+                                }
+                                case None => strBuilder += 'x' /* when it faild check hex string, re check next loop */
                             }
-                            case c => strBuilder += c
-                        }
-                    } else Array.empty[Byte]
+                        } else strBuilder ++= hexStr
+                    }
+                    case c => strBuilder += c
                 }
-                case c => strBuilder += c
+                case '\\' => /* If the character is only '\', then it is skiped */
+                case c    => strBuilder += c
             }
         }
 
-        (buffer ++= strBuilder.mkString.getBytes).toArray
+        (buffer ++= strBuilder.mkString.getBytes(charset)).toArray
     }
 
     def hexStr2byteArray(src: String): Array[Byte] = {
