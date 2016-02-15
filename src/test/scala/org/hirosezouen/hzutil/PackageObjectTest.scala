@@ -26,15 +26,22 @@ class PackageObjectTest extends FunSuite {
     }
 
     test("hexDump") {
-        val e = """00000000 : 30313233343536373839414243444546 : 0123456789ABCDEF
-                  |00000010 : 303132333435363738390d0a41424344 : 0123456789??ABCD
-                  |00000020 : 30313233343536373839             : 0123456789
-                  |""".stripMargin
+
+        val e = f"00000000 : 30313233343536373839414243444546 : 0123456789ABCDEF%n" +
+                f"00000010 : 303132333435363738390d0a41424344 : 0123456789??ABCD%n" +
+                f"00000020 : 30313233343536373839             : 0123456789%n"
         val a = Array[Byte](0x30,0x31,0x32,0x33,0x34,0x35,0x36,0x37,0x38,0x39,0x41,0x42,0x43,0x44,0x45,0x46,
                             0x30,0x31,0x32,0x33,0x34,0x35,0x36,0x37,0x38,0x39,0x0d,0x0a,0x41,0x42,0x43,0x44,
                             0x30,0x31,0x32,0x33,0x34,0x35,0x36,0x37,0x38,0x39)
-//        printf(e)
-//        printf(hexDump(a))
+/*
+        println(e)
+        println(e.length)
+        println(e.map(c => c.toInt).map(c => f"$c%02x").mkString(","))
+        val h = hexDump(a)
+        println(h)
+        println(h.length)
+        println(h.map(c => c.toInt).map(c => f"$c%02x").mkString(","))
+*/
         assertResult(e)(hexDump(a))
     }
 
@@ -57,7 +64,7 @@ class PackageObjectTest extends FunSuite {
                       0x00, 0x01, 0x02, 0xab, 0xcd, 0xef, 0xff, 0x78, 0x7A, 0x7A, 0x61, 0x78, 0x61).map(_.toByte)
         import java.nio.charset.Charset
         val a1 = string2ByteArray("""あいうえお能\x00\x01\x02\xab\xcd\xef\xff\xzz\a\x\a""")(Charset.forName("Shift_JIS"))
-        println(a1.map(s => f"$s%02X").mkString)
+//        println(a1.map(s => f"$s%02X").mkString)
         assert(e1 sameElements a1)
     }
     
