@@ -1,4 +1,9 @@
 *.swp
+*.swk
+*.swl
+*.swm
+*.swn
+*.swo
 *.*~
 
 project
