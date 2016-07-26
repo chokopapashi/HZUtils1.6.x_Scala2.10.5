@@ -9,6 +9,9 @@
 package org.hirosezouen.hznet
 
 import java.io.IOException
+import java.net.BindException
+import java.net.InetAddress
+import java.net.InetSocketAddress
 import java.net.ServerSocket
 
 import scala.actors._
@@ -44,15 +47,35 @@ case class HZSocketServer(hzSoConf: HZSoServerConf)
             }
             self.trapExit = true
 
-            val serverSocket: ServerSocket = catching(classOf[IOException]) either {
-                new ServerSocket(hzSoConf.port)
-            } match {
-                case Right(svso) => svso
-                case Left(th) => {
-                    log_hzso_actor_error("new serverSocket(%d):Left(%s)".format(hzSoConf.port,th)) 
-                    log_hzso_actor_debug("new serverSocket(%d):Left".format(hzSoConf.port),th) 
-                    exit(HZErrorStoped(th))
+            val serverSocket: ServerSocket = {
+                val svsoAddr = hzSoConf.bindAddressOpt match {
+                    case Some(bindAddress) => new InetSocketAddress(bindAddress, hzSoConf.port)
+                    case None => new InetSocketAddress(null.asInstanceOf[InetAddress], hzSoConf.port)
                 }
+                log_hzso_actor_debug("serversocket address:%s".format(svsoAddr));
+                val svso = new ServerSocket()
+                catching(classOf[IOException]) either {
+                    svso.setReuseAddress(hzSoConf.reuseAddress)
+                    svso.bind(svsoAddr)
+                } match {
+                    case Right(_) => /* Ok, Nothing to do. */
+                    case Left(th) => th match {
+                        case _: BindException => {
+                            log_hzso_actor_error("serverSocket.bind(%s):Left(BindException(%s))".format(svsoAddr,th.getMessage))
+                            exit(HZErrorStoped(th))
+                        }
+                        case _: IOException => {
+                            log_hzso_actor_error("serverSocket.bind(%s):Left(IOExcpetion(%s))".format(svsoAddr,th.getMessage))
+                            exit(HZErrorStoped(th))
+                        }
+                        case _ => {
+                            log_hzso_actor_error("serverSocket.bind(%s):Left(%s)".format(svsoAddr,th)) 
+                            log_hzso_actor_debug("serverSocket.bind(%s):Left".format(svsoAddr),th) 
+                            exit(HZErrorStoped(th))
+                        }
+                    }
+                }
+                svso
             }
 
             var acceptActor: Actor = null
